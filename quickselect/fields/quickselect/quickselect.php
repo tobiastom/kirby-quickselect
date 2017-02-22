@@ -45,7 +45,9 @@ class QuickselectField extends SelectField {
          }
          
          if($image = $this->page()->image($value)) {
-           $image = $image->crop(75, 75)->url();
+           
+          $image = $image->resize(75)->url();
+           
            $select->append(
              $this->option($value, $text, $this->value() == $value)->attr("data-image", $image)
            );   

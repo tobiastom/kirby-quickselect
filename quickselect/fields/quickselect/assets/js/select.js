@@ -37,7 +37,7 @@
         }
         else {                    
           var $opt = $(
-            '<span class="with-image"><img src="' + optimage + '"/> ' + opt.text + '</span>'
+            '<span class="with-image"><span class="image"><img src="' + optimage + '"/></span> <span class="text">' + opt.text + '</span></span>'
           );
         }
         
