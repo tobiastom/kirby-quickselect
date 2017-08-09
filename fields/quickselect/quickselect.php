@@ -12,6 +12,10 @@ class QuickselectField extends SelectField {
       'select.css'
     )
   );
+  
+  public function options() {
+    return FieldOptions::build($this);
+  }
 
 	public function input() {
 		$select = new Brick('select');
@@ -33,6 +37,20 @@ class QuickselectField extends SelectField {
 		if($this->readonly()) {
 			$select->attr('tabindex', '-1');
 		}
+		
+		$o = "";
+		if ($this->options === "pages") {
+		  $o = "pages";
+		}
+		elseif ($this->options === "query") {
+		  if ($this->query["fetch"] == "pages" OR 
+		  $this->query["fetch"] == "index" OR 
+		  str::contains($this->query["fetch"], "children", true) OR
+		  str::contains($this->query["fetch"], "siblings", true)
+		  ) {
+		    $o = "query";
+		  }
+		}
 
 		foreach($this->options() as $value => $text) {
 		  
@@ -43,7 +61,6 @@ class QuickselectField extends SelectField {
 	       if (!strpos(implode(",", $select->attr("class")), "images")  !== false) {
            $select->addClass("images");
          }
-         
          if($image = $this->page()->image($value)) {
            $image = $image->crop(75, 75)->url();
            $select->append(
@@ -55,7 +72,19 @@ class QuickselectField extends SelectField {
               $this->option($value, $text, $this->value() == $value)
             );
          }
- 
+		  }
+		  elseif ($o != "") {
+		    
+		    if ($p = page($value)) {
+		      if ($p->title() == "_modules" OR str::contains($p->intendedTemplate(), 'module')) {
+		        continue;
+		      }
+		    }
+		    
+		    $select->append(
+		      $this->option($value, $text, $this->value() == $value)
+		    );
+		    
 		  }
 		  else {
         
